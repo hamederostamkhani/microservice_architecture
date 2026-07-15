@@ -1,28 +1,48 @@
-# Microservices Architecture & Docker Containers
+# Microservices Architecture with Docker
 
+A sample microservices project demonstrating service discovery, API gateway routing, asynchronous communication, centralized logging, and containerized deployment using Docker.
 
-### Use case & Architecture
+---
 
-The sample application has four services namely getSellers, getProducts, addProductToSeller and getCorrelatedLogs. Each of the service created with multiple microservices. You can see the top level architecture of this demo in the image below.
+## Architecture Overview
 
-![alt tag](https://github.com/gymofjava/microservice_architecture/blob/main/microservice_demo.png?raw=true)
+This project consists of four business services:
 
-You can see demo video:
-[![Watch the video]](https://github.com/gymofjava/microservice_architecture/blob/main/demo_video.mp4)
+* **getSellers**
+* **getProducts**
+* **addProductToSeller**
+* **getCorrelatedLogs**
 
+Each service is implemented as one or more Spring Boot microservices and runs independently inside Docker containers.
 
-### Components Integrated & Tools Usage   
-##### Service registration and discovery
+The overall architecture is shown below:
 
-During the initialization of a service, it would get registered to the discovery and registration server (which in our demo is Hashicorp's Consul).
-Configuration done in micro services to register to Consul:   
-```
+![Microservices Architecture](https://github.com/gymofjava/microservice_architecture/blob/main/microservice_demo.png?raw=true)
+
+## Demo
+
+Watch the project demo:
+
+[Demo Video](https://github.com/gymofjava/microservice_architecture/blob/main/demo_video.mp4)
+
+---
+
+# Components
+
+## Service Discovery (Consul)
+
+Each microservice automatically registers itself with **HashiCorp Consul** when it starts.
+
+Example configuration:
+
+```yaml
 management:
   contextPath: /actuator
 
 spring:
   application:
     name: gateway
+
   cloud:
     consul:
       host: consul_server
@@ -30,47 +50,127 @@ spring:
       discovery:
         hostname: gateway
         health-check-path: /actuator/health
-        instance-id: ${spring.application.name}:${random.value}
         health-check-interval: 10s
+        instance-id: ${spring.application.name}:${random.value}
 ```
-Consul management console can be accessed at http://localhost:8500/ui/ 
-![alt tag](https://github.com/gymofjava/microservice_architecture/blob/main/consul.png?raw=true)
 
-##### API Gateway
-   
-Spring Cloud Gateway is a the reverse proxy server which acts as the API Gateway for accessing the micro services behind the gateway which routes the request to the respective service. Microservice’s stay behind reverse proxy server and needs to be consumed via api gateway. The api-gateway micro service with docker profile runs on port 9090.
+Consul UI:
 
- 
-##### Monitoring and vizualization
+```
+http://localhost:8500/ui/
+```
 
-Monitoring, visualisation & management of the logs done by splunk enterprise.   
+![Consul](https://github.com/gymofjava/microservice_architecture/blob/main/consul.png?raw=true)
 
-splunk enterprise ui can be accessed at http://localhost:7071/   
+---
 
-![alt tag](https://github.com/gymofjava/microservice_architecture/blob/main/splunk.png?raw=true)
+## API Gateway
 
-##### Asynchronous microservices communication  
+The application uses **Spring Cloud Gateway** as the single entry point for all client requests.
 
-Intercommunication between microservices happens asynchronously with the help of RabbitMQ.
+Responsibilities include:
 
-RabbitMQ console can be accessed at http://localhost:15672/
+* Request routing
+* Reverse proxy
+* Service abstraction
+* Load balancing through service discovery
 
-### Technology
+The Gateway service runs on:
 
-Microservices sample project uses a number of open source projects to work properly:
+```
+http://localhost:9090
+```
 
-* [SpringBoot] - Application framework
-* [SpringCloudGateway] - API Gateway 
-* [Consul] - Service Registration and Discovery
-* [Docker] - Containerization Platform
-* [RabbitMQ] - Asynchronous microservices messaging
-* [SplunkUniversalForwarder] - Log forwarder
-* [SplunkEnterprise] - Log Management (time-series db)
-* [Angular] - Web App
+---
 
-### Tools
+## Centralized Logging
 
-* [Java] - Programming
-* [Maven] - Build
-* [Git] - Version control
-* [Docker] - Deployment
+Application logs are collected and visualized using **Splunk Enterprise**.
+
+Logs are forwarded by **Splunk Universal Forwarder**, allowing centralized monitoring and correlation across all services.
+
+Splunk UI:
+
+```
+http://localhost:7071
+```
+
+![Splunk Dashboard](https://github.com/gymofjava/microservice_architecture/blob/main/splunk.png?raw=true)
+
+---
+
+## Asynchronous Communication
+
+Microservices communicate asynchronously using **RabbitMQ**.
+
+RabbitMQ provides:
+
+* Event-driven communication
+* Decoupled services
+* Reliable message delivery
+
+RabbitMQ Management Console:
+
+```
+http://localhost:15672
+```
+
+---
+
+# Technologies
+
+| Technology                 | Purpose                            |
+| -------------------------- | ---------------------------------- |
+| Spring Boot                | Microservice framework             |
+| Spring Cloud Gateway       | API Gateway                        |
+| HashiCorp Consul           | Service discovery and registration |
+| RabbitMQ                   | Asynchronous messaging             |
+| Docker                     | Containerization                   |
+| Splunk Enterprise          | Log management and visualization   |
+| Splunk Universal Forwarder | Log forwarding                     |
+| Angular                    | Frontend application               |
+
+---
+
+# Development Tools
+
+| Tool   | Purpose                                |
+| ------ | -------------------------------------- |
+| Java   | Programming language                   |
+| Maven  | Build automation                       |
+| Git    | Version control                        |
+| Docker | Deployment and container orchestration |
+
+---
+
+# Project Highlights
+
+* Docker-based microservices architecture
+* API Gateway with Spring Cloud Gateway
+* Service discovery using Consul
+* Event-driven communication with RabbitMQ
+* Centralized logging using Splunk
+* Independent deployment of services
+* Health monitoring with Spring Boot Actuator
+
+---
+
+# Access URLs
+
+| Component   | URL                       |
+| ----------- | ------------------------- |
+| API Gateway | http://localhost:9090     |
+| Consul      | http://localhost:8500/ui/ |
+| RabbitMQ    | http://localhost:15672    |
+| Splunk      | http://localhost:7071     |
+
+---
+
+# Future Improvements
+
+* Add Docker Compose setup instructions
+* Include Kubernetes deployment manifests
+* Add authentication (JWT / OAuth2)
+* Add distributed tracing (Zipkin or Jaeger)
+* Add Prometheus and Grafana monitoring
+* Include API documentation with Swagger/OpenAPI
