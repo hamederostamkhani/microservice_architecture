@@ -1,0 +1,20 @@
+<mat-grid-list cols="4">
+  <mat-grid-tile
+    *ngFor="let data of dataList"
+    [colspan]="data.cols"
+    [rowspan]="data.rows"
+    style="height: calc((100% - 0.75px + 1px) * 2);">
+    <mat-list>
+      <h1 style="margin: 1rem">{{data.text}}</h1>
+      <mat-divider></mat-divider>
+      <mat-list-item *ngFor="let seller of data.sellers">
+        <mat-icon mat-list-icon mat-card-avatar
+                  [style.background-image]="'url(' + seller.image + ')'"
+                  style="background-size: cover"></mat-icon>
+        <div mat-line>{{seller.firstName}} </div>
+        <div mat-line>{{seller.lastName}}</div>
+        <div mat-row><mat-icon mat-list-icon style="cursor: pointer" (click)="addOrRemove(data.addOrRemove, seller)">{{data.addOrRemove}}</mat-icon></div>
+      </mat-list-item>
+    </mat-list>
+  </mat-grid-tile>
+</mat-grid-list>

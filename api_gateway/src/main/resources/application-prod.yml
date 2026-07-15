@@ -1,0 +1,15 @@
+server:
+  port: 9090
+
+spring:
+  application:
+    name: gateway
+  cloud:
+    consul:
+      host: consul_server
+      port: 8500
+      discovery:
+        hostname: gateway
+        health-check-path: /actuator/health
+        instance-id: ${spring.application.name}:${random.value}
+        health-check-interval: 10s

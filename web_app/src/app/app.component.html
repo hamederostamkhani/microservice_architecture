@@ -1,0 +1,13 @@
+<nav mat-tab-nav-bar>
+  <a mat-tab-link
+     *ngFor="let link of navLinks"
+     [routerLink]="link.link"
+     routerLinkActive #rla="routerLinkActive"
+     [active]="rla.isActive">
+    {{link.label}}
+  </a>
+  <mat-icon style="margin: 0.7rem; margin-left: auto;">settings</mat-icon>
+</nav>
+<div style="margin: 1rem">
+  <router-outlet></router-outlet>
+</div>

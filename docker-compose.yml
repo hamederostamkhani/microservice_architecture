@@ -1,0 +1,170 @@
+version: '3.0'
+
+services:
+
+  docker_registry:
+    image: registry:latest
+    container_name: docker_registry
+    restart: on-failure
+    ports:
+      - "5000:5000"
+    volumes:
+      - /home/hamed/microservice_infra/registry/images:/var/lib/registry
+
+  rabbitmq:
+    image: rabbitmq:3.9-management
+    container_name: rabbitmq
+    restart: on-failure
+    networks:
+      - microservice_network
+    environment:
+      - RABBITMQ_DEFAULT_USER=rabbit
+      - RABBITMQ_DEFAULT_PASS=rabbit123456
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+    volumes:
+      - /home/hamed/microservice_infra/rabbitmq/data:/var/lib/rabbitmq
+
+  consul_server:
+    image: consul:latest
+    container_name: consul_server
+    restart: on-failure
+    networks:
+      - microservice_network
+    ports:
+      - "8500:8500"
+      - "8600:8600/tcp"
+      - "8600:8600/udp"
+    volumes:
+      - /home/hamed/microservice_infra/consul/server.json:/consul/config/server.json:ro
+      - /home/hamed/microservice_infra/consul/certs/:/consul/config/certs/:ro
+      - /home/hamed/microservice_infra/consul/data/:/consul/data
+    command: "agent -bootstrap-expect=1"
+
+  splunk_enterprise:
+    image: splunkenterprise:8.2.1
+    container_name: splunk_enterprise
+    restart: on-failure
+    networks:
+      - microservice_network
+    ports:
+      - "7071:8000"
+      - "7070:8089"
+      - "9997:9997"
+    volumes:
+      - /home/hamed/microservice_infra/splunk_enterprise/data/var/:/opt/splunk/var
+      - /home/hamed/microservice_infra/splunk_enterprise/data/etc/:/opt/splunk/etc
+    environment:
+      - SPLUNK_PASSWORD=admin123456
+
+  splunk_universal_forwarder:
+    image: splunkuniversalforwarder:8.2.1
+    container_name: splunk_universal_forwarder
+    restart: on-failure
+    networks:
+      - microservice_network
+    ports:
+      - "7072:8089"
+    volumes:
+      - /home/hamed/microservice_infra/splunk_forwarder/data/etc/:/opt/splunkforwarder/etc
+      - /home/hamed/microservice_infra/splunk_forwarder/data/var/:/opt/splunkforwarder/var
+      - /home/hamed/microservice_infra/logs/:/opt/splunkforwarder/logs
+    environment:
+      - SPLUNK_PASSWORD=admin123456789
+
+  postgre_db:
+    image: postgres:latest
+    container_name: postgre_db
+    restart: on-failure
+    networks:
+      - microservice_network
+    ports:
+      - "5432:5432"
+    volumes:
+      - /home/hamed/microservice_infra/postgre/persistence:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres123456
+
+  mongo_db:
+    image: mongo:latest
+    container_name: mongo_db
+    restart: on-failure
+    networks:
+      - microservice_network
+    ports:
+      - "27017:27017"
+    volumes:
+      - /home/hamed/microservice_infra/mongodb/persistence:/data/db
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=mpngo
+      - MONGO_INITDB_ROOT_PASSWORD=mongo123456
+
+  gateway:
+    image: 192.168.152.130:5000/gateway:4.1
+    container_name: gateway
+    restart: on-failure
+    networks:
+      - microservice_network
+    volumes:
+      - /home/hamed/microservice_infra/logs/gateway:/app/logs
+    ports:
+      - "9090:9090"
+
+  ms1:
+    image: 192.168.152.130:5000/ms1:4.0
+    container_name: ms1
+    restart: on-failure
+    networks:
+      - microservice_network
+    volumes:
+      - /home/hamed/microservice_infra/logs/ms1:/app/logs
+    ports:
+      - "9091:9091"
+
+  ms2:
+    image: 192.168.152.130:5000/ms2:4.0
+    container_name: ms2
+    restart: on-failure
+    networks:
+      - microservice_network
+    volumes:
+      - /home/hamed/microservice_infra/logs/ms2:/app/logs
+    ports:
+      - "9092:9092"
+
+  ms3:
+    image: 192.168.152.130:5000/ms3:4.0
+    container_name: ms3
+    restart: on-failure
+    networks:
+      - microservice_network
+    volumes:
+      - /home/hamed/microservice_infra/logs/ms3:/app/logs
+    ports:
+      - "9093:9093"
+
+  ms4:
+    image: 192.168.152.130:5000/ms4:4.1
+    container_name: ms4
+    restart: on-failure
+    networks:
+      - microservice_network
+    volumes:
+      - /home/hamed/microservice_infra/logs/ms4:/app/logs
+    ports:
+      - "9094:9094"
+
+  web_app:
+    image: 192.168.152.130:5000/web_app:4.4
+    container_name: web_app
+    restart: on-failure
+    networks:
+      - microservice_network
+    ports:
+      - "80:80"
+
+networks:
+  microservice_network:
+    driver: bridge

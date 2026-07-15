@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <springProperty name="artifactName" source="spring.application.name"/>
+    <property name="HOME_LOG" value="logs/app.log"/>
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>[%d] %-5level [${artifactName}] %logger{36}.%M [%thread] %m%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="FILE-ROLLING" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${HOME_LOG}</file>
+
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>logs/archived/app.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <!-- each archived file, size max 10MB -->
+            <maxFileSize>10MB</maxFileSize>
+            <!-- total size of all archive files, if total size > 20GB,
+				it will delete old archived file -->
+            <totalSizeCap>20GB</totalSizeCap>
+            <!-- 60 days to keep -->
+            <maxHistory>60</maxHistory>
+        </rollingPolicy>
+
+        <encoder>
+            <!--            <pattern>[%d] %p %c{1.} [%t] %m%n</pattern>-->
+            <pattern>[%d] %-5level [${artifactName}] %logger{36}.%M [%thread] %m%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="ASYNC-FILE-ROLLING-APPENDER" class="ch.qos.logback.classic.AsyncAppender">
+        <appender-ref ref="FILE-ROLLING"/>
+        <includeCallerData>true</includeCallerData>
+    </appender>
+
+    <appender name="ASYNC-STDOUT-APPENDER" class="ch.qos.logback.classic.AsyncAppender">
+        <appender-ref ref="STDOUT"/>
+        <includeCallerData>true</includeCallerData>
+    </appender>
+
+    <logger name="com.javagym" level="info" additivity="false">
+        <appender-ref ref="ASYNC-FILE-ROLLING-APPENDER"/>
+        <appender-ref ref="ASYNC-STDOUT-APPENDER"/>
+    </logger>
+
+    <root level="info">
+        <appender-ref ref="STDOUT"/>
+    </root>
+
+</configuration>

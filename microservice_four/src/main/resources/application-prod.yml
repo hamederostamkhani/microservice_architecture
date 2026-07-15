@@ -1,0 +1,28 @@
+server:
+  port: 9094
+
+spring:
+  application:
+    name: ms4
+  cloud:
+    consul:
+      host: consul_server
+      port: 8500
+      discovery:
+        hostname: ms4
+        health-check-path: /actuator/health
+        instance-id: ${spring.application.name}:${random.value}
+        health-check-interval: 10s
+
+splunk:
+  host: splunk_enterprise
+  port: 8089
+  username: admin
+  password: admin123456
+  pool:
+    lifo: true
+    max-total: 6
+    max-idle: 4
+    min-idle: 1
+    max-wait-millis: 3000
+    test-on-borrow: true

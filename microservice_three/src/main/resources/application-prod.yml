@@ -1,0 +1,15 @@
+server:
+  port: 9093
+
+spring:
+  application:
+    name: ms3
+  cloud:
+    consul:
+      host: consul_server
+      port: 8500
+      discovery:
+        hostname: ms3
+        health-check-path: /actuator/health
+        instance-id: ${spring.application.name}:${random.value}
+        health-check-interval: 10s

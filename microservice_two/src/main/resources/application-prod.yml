@@ -1,0 +1,28 @@
+server:
+  port: 9092
+
+spring:
+  application:
+    name: ms2
+  data:
+    mongodb:
+      database: ms2
+      host: mongo_db
+      port: 27017
+      username: mpngo
+      password: mongo123456
+      authentication-database: admin
+  cloud:
+    consul:
+      host: consul_server
+      port: 8500
+      discovery:
+        hostname: ms2
+        health-check-path: /actuator/health
+        instance-id: ${spring.application.name}:${random.value}
+        health-check-interval: 10s
+  rabbitmq:
+    host: rabbitmq
+    port: 5672
+    username: rabbit
+    password: rabbit123456

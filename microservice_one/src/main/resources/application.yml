@@ -1,0 +1,26 @@
+server:
+  port: 9091
+
+spring:
+  profiles:
+    active: prod
+  application:
+    name: ms1
+  r2dbc:
+    url: r2dbc:postgresql://192.168.152.130:5432/ms1?currentSchema=store
+    username: postgres
+    password: postgres123456
+  cloud:
+    consul:
+      host: 192.168.152.130
+      port: 8500
+      discovery:
+        hostname: localhost
+        health-check-path: /actuator/health
+        instance-id: ${spring.application.name}:${random.value}
+        health-check-interval: 20s
+  rabbitmq:
+    host: 192.168.152.130
+    port: 5672
+    username: rabbit
+    password: rabbit123456
