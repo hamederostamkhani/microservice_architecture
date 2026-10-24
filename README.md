@@ -60,7 +60,7 @@ Consul UI:
 http://localhost:8500/ui/
 ```
 
-![Consul](https://github.com/gymofjava/microservice_architecture/blob/main/consul.png?raw=true)
+![Consul](https://github.com/hamederostamkhani/microservice_architecture/blob/main/consul.png?raw=true)
 
 ---
 
@@ -95,7 +95,7 @@ Splunk UI:
 http://localhost:7071
 ```
 
-![Splunk Dashboard](https://github.com/gymofjava/microservice_architecture/blob/main/splunk.png?raw=true)
+![Splunk Dashboard](https://github.com/hamederostamkhani/microservice_architecture/blob/main/splunk.png?raw=true)
 
 ---
 
