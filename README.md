@@ -17,13 +17,13 @@ Each service is implemented as one or more Spring Boot microservices and runs in
 
 The overall architecture is shown below:
 
-![Microservices Architecture](https://github.com/gymofjava/microservice_architecture/blob/main/microservice_demo.png?raw=true)
+![Microservices Architecture](https://github.com/hamederostamkhani/microservice_architecture/blob/main/microservice_demo.png?raw=true)
 
 ## Demo
 
 Watch the project demo:
 
-[Demo Video](https://github.com/gymofjava/microservice_architecture/blob/main/demo_video.mp4)
+[Demo Video](https://github.com/hamederostamkhani/microservice_architecture/blob/main/demo_video.mp4)
 
 ---
 
